@@ -5,16 +5,18 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
 
+    private Rigidbody2D rig;
+    private Animator anim;
     public float speed;
     public bool isJumpping;
+    public float jumpForce;
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        rig = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         Move();
@@ -23,29 +25,38 @@ public class PlayerScript : MonoBehaviour
 
     void Move() {
         // Movimento em si //
-        Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f);
-        transform.position += movement * Time.deltaTime * speed;
+        float movement = Input.GetAxis("Horizontal");
+        rig.velocity = new Vector2(movement * speed, rig.velocity.y);
+
         // Animação //
-        if (Input.GetAxis("Horizontal") > 0f) { // horizontal > 0 ----> direita
-
-        } else if (Input.GetAxis("Horizontal") < 0f) { // horizontal < 0 ----> esquerda
-
-        } else { // Parado
-
+        if (movement > 0f) {
+            anim.SetBool("walk", true);
+            transform.eulerAngles = new Vector3(0f, 0f, 0f);
+        } else if (movement < 0f) {
+            anim.SetBool("walk", true);
+            transform.eulerAngles = new Vector3(0f, 180f, 0f);
+        } else {
+            anim.SetBool("walk", false);
         }
     }
 
     void Jump() {
-        if (Input.GetButtonDown("Jump")) { // Se eu apertar o botao de Jump
-        
+        if (Input.GetButtonDown("Jump") && !isJumpping) { // Se eu apertar o botao de Jump
+            rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
         }
     }
 
     void OnCollisionEnter2D(Collision2D col) {
-
+        if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) {
+            isJumpping = false;
+            anim.SetBool("jump", false);
+        }
     }
 
     void OnCollisionExit2D(Collision2D col) {
-
+        if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) {
+            isJumpping = true;
+            anim.SetBool("jump", true);
+        }
     }
 }
