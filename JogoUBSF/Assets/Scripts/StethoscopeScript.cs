@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class StethoscopeScript : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+    public int scoreStethoscope;
+    private CircleCollider2D colisorStethoscope;
+    private SpriteRenderer spriteStethoscope;
+
     void Start()
     {
-        
+        colisorStethoscope = GetComponent<CircleCollider2D>();
+        spriteStethoscope = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void OnTriggerEnter2D(Collider2D collider) {
+        if (collider.gameObject.tag == "Player") {
+            colisorStethoscope.enabled = false;
+            spriteStethoscope.enabled = false;
+
+            Destroy(gameObject, 1f);
+        }
     }
 }

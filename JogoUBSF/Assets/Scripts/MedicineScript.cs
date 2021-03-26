@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class MedicineScript : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+    public int scoreMedicine;
+    private BoxCollider2D colisorMedicine;
+    private SpriteRenderer spriteMedicine;
+
     void Start()
     {
-        
+        colisorMedicine = GetComponent<BoxCollider2D>();
+        spriteMedicine = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void OnTriggerEnter2D(Collider2D collider) {
+        if (collider.gameObject.tag == "Player") {
+            colisorMedicine.enabled = false;
+            spriteMedicine.enabled = false;
+
+            Destroy(gameObject, 1f);
+        }
     }
 }

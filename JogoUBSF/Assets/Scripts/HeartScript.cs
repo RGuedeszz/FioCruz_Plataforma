@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class HeartScript : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+    public int scoreHeart;
+    private CircleCollider2D colisorHeart;
+    private SpriteRenderer spriteHeart;
+
     void Start()
     {
-        
+        colisorHeart = GetComponent<CircleCollider2D>();
+        spriteHeart = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void OnTriggerEnter2D(Collider2D collider) {
+        if (collider.gameObject.tag == "Player") {
+            colisorHeart.enabled = false;
+            spriteHeart.enabled = false;
+
+            Destroy(gameObject, 1f);
+        }
     }
 }
